@@ -1,541 +1,544 @@
-    <! DOCTYPE html>  
-    <html lang = "en">  
-    <head>  
-      <meta charset = "UTF-8">  
-      <meta name = "viewport" content = "width=device-width, initial-scale=1.0">  
-      <meta http-equiv = "X-UA-Compatible" content = "ie=edge">  
-      <title> How to display a digital clock using HTML, CSS and JavaScript?  
-     </title>  
-    <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.1/jquery.min.js"> </script>  
-            <script src = "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.0.0/moment.min.js"> </script>   
-    <style>  
-    body {  
-    text-align: center;  
-    }  
-    a {  
-        outline: none;  
-        color: #389dc1;  
-    }  
-    a:visited {  
-        outline: none;  
-        color: #389dc1;  
-    }  
-    a:hover {  
-        text-decoration: none;  
-    }  
-    section, footer, header, aside {  
-        display: block;  
-    }  
-    #clock {  
-        width: 370px;  
-        padding: 40px;  
-        margin: 100px auto 60px;  
-        position: relative;  
-    }  
-    #clock:after {  
-        content: ' ';  
-        position: absolute;  
-        width: 400px;  
-        height: 20px;  
-        border-radius: 100%;  
-        left: 50%;  
-        margin-left: -200px;  
-        bottom: 2px;  
-        z-index: -1;  
-    }  
-    #clock .display {  
-        text-align: center;  
-        padding: 40px 20px 20px;  
-        border-radius: 6px;  
-        position: relative;  
-        height: 54px;  
-    }  
-    #clock.light {  
-        background-color: #f3f3f3;  
-        color: #272e38;  
-    }  
-    #clock.light:after {  
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);  
-    }  
-    #clock.light .digits div span {  
-        background-color: #272e38;  
-        border-color: #272e38;    
-    }  
-    #clock.light .digits div.dots:before {  
-        background-color: #272e38;  
-    }  
-    #clock.light .digits div.dots:after {  
-        background-color: #272e38;  
-    }  
-    #clock.light .alarm {  
-        background:url('../img/alarm_light.jpg');  
-    }  
-    #clock.light .display {  
-        background-color: #dddddd;  
-        box-shadow: 0 1px 1px rgba(0,0,0,0.08) inset, 0 1px 1px #fafafa;  
-    }  
-    #clock.dark {  
-        background-color: #272e38;  
-        color: #cacaca;  
-    }  
-    #clock.dark:after {  
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);  
-    }  
-    #clock.dark .digits div span {  
-        background-color: #cacaca;  
-        border-color: #cacaca;    
-    }  
-    #clock.dark .alarm {  
-        background:url('../img/alarm_dark.jpg');  
-    }  
-    #clock.dark .display {  
-        background-color: #0f1620;  
-        box-shadow: 0 1px 1px rgba(0,0,0,0.08) inset, 0 1px 1px #2d3642;  
-    }  
-    #clock.dark .digits div.dots:before {  
-        background-color: #cacaca;  
-    }  
-    #clock.dark .digits div.dots:after {  
-        background-color: #cacaca;  
-    }  
-    #clock .digits div {  
-        text-align: left;  
-        position: relative;  
-        width: 28px;  
-        height: 50px;  
-        display: inline-block;  
-        margin: 0 4px;  
-    }  
-    #clock .digits div span {  
-        opacity: 0;  
-        position: absolute;  
-        -webkit-transition: 0.25s;  
-        -moz-transition: 0.25s;  
-        transition: 0.25s;  
-    }  
-    #clock .digits div span:before {  
-        content: ' ';  
-        position: absolute;  
-        width: 0;  
-        height: 0;  
-        border: 5px solid transparent;  
-    }  
-    #clock .digits div span:after {  
-        content: ' ';  
-        position: absolute;  
-        width: 0;  
-        height: 0;  
-        border: 5px solid transparent;  
-    }  
-      
-    #clock .digits .d1 {              
-    height: 5px;  
-    width: 16px;  
-    top: 0;  
-    left: 6px; }  
-    #clock .digits .d1:before {   
-    border-width: 0 5px 5px 0;  
-    border-right-color: inherit;  
-    left: -5px; }  
-    #clock .digits .d1:after {    
-    border-width: 0 0 5px 5px;  
-    border-left-color: inherit; right: -5px;  
-    }  
-    #clock .digits .d2 {              
-    height: 5px;  
-    width: 16px;  
-    top: 24px;  
-    left: 6px; }  
-    #clock .digits .d2:before {   
-    border-width: 3px 4px 2px;  
-    border-right-color: inherit;  
-    left: -8px; }  
-    #clock .digits .d2:after {    
-    border-width: 3px 4px 2px;  
-    border-left-color: inherit;  
-    right: -8px; }  
-    #clock .digits .d3 {              
-    height: 5px;  
-    width: 16px;  
-    top: 48px;   
-    left: 6px; }  
-    #clock .digits .d3:before {   
-    border-width: 5px 5px 0 0;  
-    border-right-color: inherit;  
-    left: -5px; }  
-    #clock .digits .d3:after {    
-    border-width: 5px 0 0 5px;  
-    border-left-color: inherit; right: -5px; }  
-      
-    #clock .digits .d4 {              
-    width: 5px;  
-    height: 14px;   
-    top: 7px; left: 0;   
-    }  
-    #clock .digits .d4:before {   
-    border-width: 0 5px 5px 0;  
-    border-bottom-color: inherit;  
-    top: -5px; }  
-    #clock .digits .d4:after {   
-    border-width: 0 0 5px 5px;  
-    border-left-color: inherit;  
-    bottom: -5px; }  
-    #clock .digits .d5 {              
-    width: 5px;  
-    height: 14px;   
-    top: 7px;   
-    right: 0; }  
-    #clock .digits .d5:before {   
-    border-width: 0 0 5px 5px;  
-    border-bottom-color: inherit;   
-    top: -5px; }  
-    #clock .digits .d5:after {    
-    border-width: 5px 0 0 5px;   
-    border-top-color: inherit;  
-    bottom: -5px; }  
-    #clock .digits .d6 {              
-    width: 5px;  
-    height: 14px;  
-    top: 32px;   
-    left: 0; }  
-    #clock .digits .d6:before {   
-    border-width: 0 5px 5px 0;  
-    border-bottom-color: inherit;  
-    top: -5px; }  
-    #clock .digits .d6:after {    
-    border-width: 0 0 5px 5px;  
-    border-left-color: inherit;  
-    bottom: -5px; }  
-    #clock .digits .d7 {              
-    width: 5px;  
-    height: 14px;   
-    top: 32px;  
-    right: 0; }  
-    #clock .digits .d7:before {   
-    border-width: 0 0 5px 5px;  
-    border-bottom-color: inherit;   
-    top: -5px; }  
-    #clock .digits .d7:after {    
-    border-width: 5px 0 0 5px;  
-    border-top-color: inherit;  
-    bottom: -5px; }  
-    #clock .digits div.one .d5 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.one .d7 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.two .d1 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.two .d5 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.two .d2 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.two .d6 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.two .d3 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.three .d1,  
-    #clock .digits div.three .d5,  
-    #clock .digits div.three .d2,  
-    #clock .digits div.three .d7,  
-    #clock .digits div.three .d3 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.four .d5,  
-    #clock .digits div.four .d2,  
-    #clock .digits div.four .d4,  
-    #clock .digits div.four .d7 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.five .d1,  
-    #clock .digits div.five .d2,  
-    #clock .digits div.five .d4,  
-    #clock .digits div.five .d3,  
-    #clock .digits div.five .d7 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.six .d1,  
-    #clock .digits div.six .d2,  
-    #clock .digits div.six .d4,  
-    #clock .digits div.six .d3,  
-    #clock .digits div.six .d6,  
-    #clock .digits div.six .d7 {  
-        opacity: 1;  
-    }  
-      
-      
-      
-    #clock .digits div.seven .d1,  
-    #clock .digits div.seven .d5,  
-    #clock .digits div.seven .d7 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.eight .d1,  
-    #clock .digits div.eight .d2,  
-    #clock .digits div.eight .d3,  
-    #clock .digits div.eight .d4,  
-    #clock .digits div.eight .d5,  
-    #clock .digits div.eight .d6,  
-    #clock .digits div.eight .d7 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.nine .d1,  
-    #clock .digits div.nine .d2,  
-    #clock .digits div.nine .d3,  
-    #clock .digits div.nine .d4,  
-    #clock .digits div.nine .d5,  
-    #clock .digits div.nine .d7 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.zero .d1,  
-    #clock .digits div.zero .d3 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.zero .d4 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.zero .d5 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.zero .d6 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.zero .d7 {  
-        opacity: 1;  
-    }  
-    #clock .digits div.dots {  
-        width: 5px;  
-    }  
-    #clock .digits div.dots:before {  
-        width: 5px;  
-        height: 5px;  
-        content: ' ';  
-        position: absolute;  
-        left: 0;  
-        top: 14px;  
-    }  
-    #clock .digits div.dots:after {  
-        width: 5px;  
-        height: 5px;  
-        content: ' ';  
-        position: absolute;  
-        left: 0;  
-        top: 14px;  
-    }  
-    #clock .digits div.dots:after {  
-        top: 34px;  
-    }  
-    #clock .alarm {  
-        width: 16px;  
-        height: 16px;  
-        bottom: 20px;  
-        background: url('../img/alarm_light.jpg');  
-        position: absolute;  
-        opacity: 0.2;  
-    }  
-    #clock .alarm.active {  
-        opacity: 1;  
-    }  
-    #clock .weekdays {  
-        font-size: 12px;  
-        position: absolute;  
-        width: 100%;  
-        top: 10px;  
-        left: 0;  
-        text-align: center;  
-    }  
-    #clock .weekdays span {  
-        opacity: 0.2;  
-        padding: 0 10px;  
-    }  
-    #clock .weekdays span.active {  
-        opacity: 1;  
-    }  
-    #clock .ampm {  
-        position: absolute;  
-        bottom: 20px;  
-        right: 20px;  
-        font-size: 12px;  
-    }  
-    .button-holder {  
-        text-align: center;  
-        padding-bottom: 100px;  
-    }  
-    a.button {  
-        background-color: #f6a7b3;  
-        background-image: -webkit-linear-gradient(top, #f6a7b3, #f0a3af);  
-        background-image: -moz-linear-gradient(top, #f6a7b3, #f0a3af);  
-        background-image: linear-gradient(top, #f6a7b3, #f0a3af);  
-        border: 1px solid #eb9ba7;  
-        border-radius: 2px;  
-        box-shadow: 0 2px 2px #ccc;  
-        color: #fff;  
-        text-decoration: none !important;  
-        padding: 15px 20px;  
-        display: inline-block;  
-        cursor: pointer;  
-    }  
-    a.button:hover {  
-        opacity: 0.9;  
-    }  
-    footer {  
-        width: 770px;  
-        font: normal 16px Arial, Helvetica, sans-serif;  
-        padding: 15px 35px;  
-        position: fixed;  
-        bottom: 0;  
-        left: 50%;  
-        margin-left: -420px;  
-        background-color:#1f1f1f;  
-        background-image: -webkit-linear-gradient(top, #1f1f1f, #101010);  
-        background-image: -moz-linear-gradient(top, #1f1f1f, #101010);  
-        background-image: linear-gradient(top, #1f1f1f, #101010);  
-        border-radius: 2px 2px 0 0;  
-        box-shadow: 0 -1px 4px rgba(0,0,0,0.4);  
-        z-index:1;  
-    }  
-    footer a.tz {  
-        font-weight: normal;  
-        font-size: 16px !important;  
-        text-decoration: none !important;  
-        display: block;  
-        margin-right: 300px;  
-        text-overflow: ellipsis;  
-        white-space: nowrap;  
-        color: #bfbfbf !important;  
-        z-index: 1;  
-    }  
-    footer a.tz:before {  
-        content: ' ';  
-        background: url('http://cdn.tutorialzine.com/misc/enhance/v2_footer_bg.png') no-repeat 0 -53px;  
-        width: 138px;  
-        height: 20px;  
-        display: inline-block;  
-        position: relative;  
-        bottom: -3px;  
-    }  
-    footer .close {  
-        position: absolute;  
-        cursor: pointer;  
-        width: 8px;  
-        height: 8px;  
-        background: url('http://cdn.tutorialzine.com/misc/enhance/v2_footer_bg.png') no-repeat 0 0px;  
-        top: 10px;  
-        right: 10px;  
-        z-index: 3;  
-    }  
-    footer #tzine-actions {  
-        position: absolute;  
-        top: 8px;  
-        width: 500px;  
-        right: 50%;  
-        margin-right: -650px;  
-        text-align: right;  
-        z-index: 2;  
-    }  
-    h1  {  
-      line-height: 2em;   
-      padding-bottom: 5px;  
-      text-transform: none;  
-      font-size: 1.7em;  
-     font-weight: bold;  
-      font-style: italic;  
-     font-family: "Lucida Console", "Courier New", monospace;  
-      color: #999;   
-      letter-spacing: -0.005em;  
-      word-spacing: 1px;  
-      letter-spacing: none;  
-    }  
-    h2  {  
-      margin-top: 40px;  
-      text-transform: none;  
-      font-size: 1.75em;  
-      font-weight: bold;  
-      font-family: "Lucida Console", "Courier New", monospace;  
-      color: #999;   
-      letter-spacing: -0.005em;   
-      word-spacing: 1px;  
-      letter-spacing: none;  
-    }  
-    footer #tzine-actions iframe {  
-        display: inline-block;  
-        height: 21px;  
-        width: 95px;  
-        position: relative;  
-        float: left;  
-        margin-top: 11px;  
-    }  
-    </style>  
-    <body>  
-    <h1> Example </h1>  
-    <h2> How to display a digital clock using HTML, CSS and JavaScript? </h2>  
-    <div id = "clock" class = "light">  
-                <div class = "display">  
-                    <div class = "weekdays"> </div>  
-                    <div class = "ampm"> </div>  
-                    <div class = "alarm"> </div>  
-                    <div class = "digits"> </div>  
-                </div>  
-            </div>  
-            <div class = "button-holder">  
-                <a class = "button"> Switch Theme </a>  
-            </div>  
-    <script>  
-    $(function() {  
-        var clock = $('#clock'),  
-            alarm = clock.find('.alarm'),  
-            ampm = clock.find('.ampm');  
-            var digit_to_name = 'zero one two three four five six seven eight nine'.split(' ');  
-        var digits = {};  
-        var positions = [  
-            'h1', 'h2', ':', 'm1', 'm2', ':', 's1', 's2'  
-        ];  
-        var digit_holder = clock.find('.digits');  
-        $.each(positions, function(){  
-            if(this == ':') {  
-                digit_holder.append('<div class="dots">');  
-            }  
-            else {  
-                var pos = $('<div>');  
-                for(var i=1; i<8; i++) {  
-                    pos.append('<span class="d' + i + '">');  
-                }  
-                digits[this] = pos;  
-                digit_holder.append(pos);  
-            }  
-        });  
-        var weekday_names = 'MON TUE WED THU FRI SAT SUN'.split(' '),  
-            weekday_holder = clock.find('.weekdays');  
-        $.each(weekday_names, function() {  
-            weekday_holder.append('<span>' + this + '</span>');  
-        });  
-        var weekdays = clock.find('.weekdays span');  
-        (function update_time() {  
-            var now = moment().format("hhmmssdA");  
-            digits.h1.attr('class', digit_to_name[now[0]]);  
-            digits.h2.attr('class', digit_to_name[now[1]]);  
-            digits.m1.attr('class', digit_to_name[now[2]]);  
-            digits.m2.attr('class', digit_to_name[now[3]]);  
-            digits.s1.attr('class', digit_to_name[now[4]]);  
-            digits.s2.attr('class', digit_to_name[now[5]]);  
-             var dow = now[6];  
-            dow--;  
-            if(dow < 0) {  
-                dow = 6;  
-            }    weekdays.removeClass('active').eq(dow).addClass('active');  
-            ampm.text(now[7]+now[8]);  
-            setTimeout(update_time, 1000);  
-        })();  
-        $('a.button').click(function() {  
-            clock.toggleClass('light dark');  
-        });  
-    });  
-    </script>  
-    </body>  
-    </html>  
+<!DOCTYPE html>
+<html>
+
+<head>
+   <!-- basic -->
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <!-- mobile metas -->
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+   <!-- site metas -->
+   <title>Polk</title>
+   <meta name="keywords" content="">
+   <meta name="description" content="">
+   <meta name="author" content="">
+   <!-- bootstrap css -->
+   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+   <!-- style css -->
+   <link rel="stylesheet" type="text/css" href="css/style.css">
+   <!-- Responsive-->
+   <link rel="stylesheet" href="css/responsive.css">
+   <!-- fevicon -->
+   <link rel="icon" href="images/fevicon.png" type="image/gif" />
+   <!-- fonts -->
+   <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet">
+   <!-- Scrollbar Custom CSS -->
+   <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+   <!-- Tweaks for older IEs-->
+   <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+</head>
+
+<body>
+   <div class="header_section">
+      <div class="container-fluid">
+         <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="index.html"><img src="images/logo.png"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+               <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+               <ul class="navbar-nav ml-auto">
+                  <li class="nav-item active">
+                     <a class="nav-link" href="index.html">Home</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="about.html">About</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="design.html">Design</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="company.html">Company</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="news.html">News</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="contact.html">Contact Us</a>
+                  </li>
+               </ul>
+               <form class="form-inline my-2 my-lg-0">
+                  <!-- Actual search box -->
+                  <div class="form-group has-search">
+                     <input type="text" class="form-control" placeholder="Search">
+                     <span class="fa fa-search form-control-feedback"></span>
+                  </div>
+                  
+               </form>
+            </div>
+         </nav>
+      </div>
+   </div>
+   <!-- header section end -->
+   <!-- banner section start -->
+   <div class="banner_section layout_padding">
+      <div class="container-fluid">
+         <div id="main_slider" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+               <div class="carousel-item active">
+                  <div class="row">
+                     <div class="col-sm-2">
+                        <h1 class="banner_taital">Design For <span style="color: #343535;">Your House</span></h1>
+                     </div>
+                     <div class="col-sm-10">
+                        <div class="images_main">
+                           <div class="banner_img"><img src="images/banner-img1.png"></div>
+                           <div class="banner_img"><img src="images/banner-img2.png"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="carousel-item">
+                  <div class="row">
+                     <div class="col-sm-2">
+                        <h1 class="banner_taital">Design For <span style="color: #343535;">Your House</span></h1>
+                     </div>
+                     <div class="col-sm-10">
+                        <div class="images_main">
+                           <div class="banner_img"><img src="images/banner-img1.png"></div>
+                           <div class="banner_img"><img src="images/banner-img2.png"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="carousel-item">
+                  <div class="row">
+                     <div class="col-sm-2">
+                        <h1 class="banner_taital">Design For <span style="color: #343535;">Your House</span></h1>
+                     </div>
+                     <div class="col-sm-10">
+                        <div class="images_main">
+                           <div class="banner_img"><img src="images/banner-img1.png"></div>
+                           <div class="banner_img"><img src="images/banner-img2.png"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <a class="carousel-control-prev" href="#main_slider" role="button" data-slide="prev">
+               <i class="fa fa-arrow-left"></i>
+            </a>
+            <a class="carousel-control-next" href="#main_slider" role="button" data-slide="next">
+               <i class="fa fa-arrow-right"></i>
+            </a>
+         </div>
+      </div>
+   </div>
+   <!-- banner section end -->
+   <!-- about section start -->
+   <div class="about_section layout_padding">
+      <div class="container">
+         <div class="row">
+            <div class="col-md-6">
+               <div class="about_taital">About <span style="color: #f7f6f6;">Company</span></div>
+               <p class="about_text">there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum
+                  generators on the Internet tend to repeat predefinedthere isn't anything embarrassing hidden in the
+                  middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined</p>
+               <div class="video_bt">
+                  <div class="play_icon"><img src="images/play-icon.png"></div>
+               </div>
+            </div>
+            <div class="col-md-6">
+               <div class="about_img"><img src="images/about-img.png"></div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- about section end -->
+   <!-- design section start -->
+   <div class="design_section layout_padding">
+      <div class="container">
+         <h1 class="design_taital">Our Interior <span style="color: #f3f3f3;">Design Work</span></h1>
+         <p class="design_text">All the Lorem Ipsum generators on the Internet tend to repeat text. All the Lorem Ipsum
+            generators on the Internet tend</p>
+         <div class="design_section_2">
+            <div class="design_section_main">
+               <div class="row">
+                  <div class="col-md-4">
+                     <div class="container_main">
+                        <img src="images/img-1.png" alt="" class="image">
+                        <div class="overlay">
+                           <div class="text">
+                              <h4 class="jony_text">Design Work</h4>
+                              <p class="some_text">There are many variations of passages of Lorem Ipsum available, but
+                                 the majority have suffered alteration in some form</p>
+                              <div class="btn_main">
+                                 <div class="buy_bt"><a href="#">Read More</a></div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-md-4">
+                     <div class="container_main">
+                        <img src="images/img-2.png" alt="" class="image">
+                        <div class="overlay">
+                           <div class="text">
+                              <h4 class="jony_text">Design Work</h4>
+                              <p class="some_text">There are many variations of passages of Lorem Ipsum available, but
+                                 the majority have suffered alteration in some form</p>
+                              <div class="btn_main">
+                                 <div class="buy_bt"><a href="#">Read More</a></div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="container_main margin_top_30">
+                        <img src="images/img-3.png" alt="" class="image">
+                        <div class="overlay">
+                           <div class="text">
+                              <h4 class="jony_text">Design Work</h4>
+                              <p class="some_text">There are many variations of passages of Lorem Ipsum available, but
+                                 the majority have suffered alteration in some form</p>
+                              <div class="btn_main">
+                                 <div class="buy_bt"><a href="#">Read More</a></div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-md-4">
+                     <div class="container_main">
+                        <img src="images/img-4.png" alt="" class="image">
+                        <div class="overlay">
+                           <div class="text">
+                              <h4 class="jony_text">Design Work</h4>
+                              <p class="some_text">There are many variations of passages of Lorem Ipsum available, but
+                                 the majority have suffered alteration in some form</p>
+                              <div class="btn_main">
+                                 <div class="buy_bt"><a href="#">Read More</a></div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="read_bt"><a href="#">See More</a></div>
+      </div>
+   </div>
+   <!-- design section end -->
+   <!-- company section start -->
+   <div class="company_section layout_padding">
+      <div class="container">
+         <div class="row">
+            <div class="col-sm-12">
+               <h1 class="company_taital">Architecture <span style="color: #fcfafa;">And Decor</span></h1>
+               <p class="company_text">Various versions have evolved over the years, sometimes by accident,</p>
+            </div>
+         </div>
+         <div class="company_section_2">
+            <div class="row">
+               <div class="col-md-6">
+                  <div class="company_img"><img src="images/company-img1.png"></div>
+               </div>
+               <div class="col-md-6">
+                  <h3 class="home_text">Home <span style="color: #f3f3f3;">Design</span></h3>
+                  <p class="lorem_text">alteration in some form, by injected humour, or randomised words which don't
+                     look even slightly believable. If you are going to use alteration in some form, by injected humour,
+                     or randomised words which don't look even slightly believable. If you are going to use </p>
+                  <div class="seemore_bt"><a href="#">See More</a></div>
+               </div>
+            </div>
+         </div>
+         <div class="company_section_3">
+            <div class="row">
+               <div class="col-md-6">
+                  <h3 class="home_text">Office <span style="color: #f3f3f3;">Design</span></h3>
+                  <p class="lorem_text">alteration in some form, by injected humour, or randomised words which don't
+                     look even slightly believable. If you are going to use alteration in some form, by injected humour,
+                     or randomised words which don't look even slightly believable. If you are going to use </p>
+                  <div class="seemore_bt"><a href="#">See More</a></div>
+               </div>
+               <div class="col-md-6">
+                  <div class="company_img"><img src="images/company-img2.png"></div>
+               </div>
+            </div>
+         </div>
+         <div class="company_section_2">
+            <div class="row">
+               <div class="col-md-6">
+                  <div class="company_img"><img src="images/company-img3.png"></div>
+               </div>
+               <div class="col-md-6">
+                  <h3 class="home_text">Furniture <span style="color: #f3f3f3;">Design</span></h3>
+                  <p class="lorem_text">alteration in some form, by injected humour, or randomised words which don't
+                     look even slightly believable. If you are going to use alteration in some form, by injected humour,
+                     or randomised words which don't look even slightly believable. If you are going to use </p>
+                  <div class="seemore_bt"><a href="#">See More</a></div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- company section end -->
+   <!-- client section start -->
+   <div class="client_section layout_padding">
+      <div class="container">
+         <div class="row">
+            <div class="col-md-12">
+               <h3 class="client_taital">Clients <span style="color: #2ea0f8;">Says</span></h3>
+            </div>
+         </div>
+         <div class="client_section_2">
+            <div id="my_slider" class="carousel slide" data-ride="carousel">
+               <div class="carousel-inner">
+                  <div class="carousel-item active">
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="client_taital_main">
+                              <div class="client_left">
+                                 <div class="client_img"><img src="images/client-img1.png"></div>
+                              </div>
+                              <div class="client_right">
+                                 <h3 class="moark_text">Joy Maro</h3>
+                                 <p class="client_text">ipsum dolor sit amet, consectetur adipiscing elit, sed veniam,
+                                    quis nostrud exercitation ullamco </p>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="client_taital_main">
+                              <div class="client_left">
+                                 <div class="client_img"><img src="images/client-img2.png"></div>
+                              </div>
+                              <div class="client_right">
+                                 <h3 class="moark_text">Kinpa Lomi</h3>
+                                 <p class="client_text">ipsum dolor sit amet, consectetur adipiscing elit, sed veniam,
+                                    quis nostrud exercitation ullamco </p>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="carousel-item">
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="client_taital_main">
+                              <div class="client_left">
+                                 <div class="client_img"><img src="images/client-img1.png"></div>
+                              </div>
+                              <div class="client_right">
+                                 <h3 class="moark_text">Joy Maro</h3>
+                                 <p class="client_text">ipsum dolor sit amet, consectetur adipiscing elit, sed veniam,
+                                    quis nostrud exercitation ullamco </p>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="client_taital_main">
+                              <div class="client_left">
+                                 <div class="client_img"><img src="images/client-img2.png"></div>
+                              </div>
+                              <div class="client_right">
+                                 <h3 class="moark_text">Kinpa Lomi</h3>
+                                 <p class="client_text">ipsum dolor sit amet, consectetur adipiscing elit, sed veniam,
+                                    quis nostrud exercitation ullamco </p>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="carousel-item">
+                     <div class="row">
+                        <div class="col-md-6">
+                           <div class="client_taital_main">
+                              <div class="client_left">
+                                 <div class="client_img"><img src="images/client-img1.png"></div>
+                              </div>
+                              <div class="client_right">
+                                 <h3 class="moark_text">Joy Maro</h3>
+                                 <p class="client_text">ipsum dolor sit amet, consectetur adipiscing elit, sed veniam,
+                                    quis nostrud exercitation ullamco </p>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="client_taital_main">
+                              <div class="client_left">
+                                 <div class="client_img"><img src="images/client-img2.png"></div>
+                              </div>
+                              <div class="client_right">
+                                 <h3 class="moark_text">Kinpa Lomi</h3>
+                                 <p class="client_text">ipsum dolor sit amet, consectetur adipiscing elit, sed veniam,
+                                    quis nostrud exercitation ullamco </p>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <a class="carousel-control-prev" href="#my_slider" role="button" data-slide="prev">
+                  <i class="fa fa-angle-left"></i>
+               </a>
+               <a class="carousel-control-next" href="#my_slider" role="button" data-slide="next">
+                  <i class="fa fa-angle-right"></i>
+               </a>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- client section end -->
+   <!-- news section start -->
+   <div class="news_section layout_padding">
+      <div class="container">
+         <div class="row">
+            <div class="col-md-12">
+               <h3 class="news_taital">Our <span style="color: #fefefd;">Team</span></h3>
+            </div>
+         </div>
+      </div>
+      <div class="news_section_2">
+         <div class="container">
+            <div class="row">
+               <div class="col-md-6">
+                  <div class="news_img"><img src="images/news-img.png"></div>
+               </div>
+               <div class="col-md-6">
+                  <div class="news_taita_main">
+                     <h3 class="news_taital_1">BLOOM Royika</h3>
+                     <p class="news_text">many variations of passages of Lorem Ipsum available, but the majority have
+                        suffered alteration in some form, by injected humour, or randomised words which don't look even
+                        slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there
+                     </p>
+                     <div class="readmore_bt"><a href="#">Read More</a></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- news section end -->
+   <!-- contact section start -->
+   <div class="contact_section layout_padding">
+      <div class="container">
+         <div class="row">
+            <div class="col-sm-12">
+               <h3 class="contact_taital">Contact <span style="color: #fefefd;">Us</span></h3>
+            </div>
+         </div>
+         <div class="contact_section_2">
+            <div class="row">
+               <div class="col-md-6">
+                  <div class="mail_section_1">
+                     <input type="text" class="mail_text" placeholder="Name" name="Name">
+                     <input type="text" class="mail_text" placeholder="Email" name="Email">
+                     <input type="text" class="mail_text" placeholder="Phone Number" name="Phone Number">
+                     <textarea class="massage-bt" placeholder="Massage" rows="5" id="comment" name="Massage"></textarea>
+                     <div class="send_bt"><a href="#">SEND</a></div>
+                  </div>
+               </div>
+               <div class="col-md-6">
+                  <div class="map_main">
+                     <div class="map-responsive">
+                        <iframe
+                           src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0s1a7phLN0iaD6-UE7m4qP-z21pH0eSc&amp;q=Eiffel+Tower+Paris+France"
+                           width="600" height="368" frameborder="0" style="border:0; width: 100%;"
+                           allowfullscreen=""></iframe>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- contact section end -->
+   <!-- footer section start -->
+   <div class="footer_section layout_padding">
+      <div class="container">
+         <div class="row">
+            <div class="col-lg-3 col-md-6">
+               <div class="footer_logo"><img src="images/logo.png"></div>
+               <p class="footer_text">There are many variations of passages of Lorem Ipsum </p>
+            </div>
+            <div class="col-lg-3 col-md-6">
+               <h3 class="footer_taital">LET US HELP YOU</h3>
+               <p class="footer_text">There are many variations of passages of Lorem Ipsum available</p>
+            </div>
+            <div class="col-lg-3 col-md-6">
+               <h3 class="footer_taital">INFORMATION</h3>
+               <div class="footer_menu">
+                  <ul>
+                     <li><a href="index.html">Home</a></li>
+                     <li><a href="about.html">About</a></li>
+                     <li><a href="services.html">Services</a></li>
+                     <li><a href="testimonial.html">Testimonial</a></li>
+                     <li><a href="contact.html">Contact Us</a></li>
+                  </ul>
+               </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+               <h3 class="footer_taital">Contact Us</h3>
+               <div class="location_text">
+                  <ul>
+                     <li>
+                        <a href="#">
+                           <i class="fa fa-map-marker" aria-hidden="true"></i><span class="padding_left_10">Page when
+                              looking at its</span>
+                        </a>
+                     </li>
+                     <li>
+                        <a href="#">
+                           <i class="fa fa-phone" aria-hidden="true"></i><span class="padding_left_10">+01
+                              1234567890</span>
+                        </a>
+                     </li>
+                     <li>
+                        <a href="#">
+                           <i class="fa fa-envelope" aria-hidden="true"></i><span
+                              class="padding_left_10">demo@gmail.com</span>
+                        </a>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+         <div class="footer_section">
+            <div class="row">
+               <div class="col-md-6">
+                  <div class="input_bt">
+                     <input type="text" class="mail_bt" placeholder="Enter Your Email" name="Enter your email">
+                     <span class="subscribe_bt" id="basic-addon2"><a href="#">Subscribe</a></span>
+                  </div>
+               </div>
+               <div class="col-md-6">
+                  <div class="footer_social_icon">
+                     <ul>
+                        <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                        <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                        <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+                        <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- footer section end -->
+   <!-- copyright section start -->
+   <div class="copyright_section">
+      <div class="container">
+         <p class="copyright_text">2020 All Rights Reserved. Design by <a href="https://html.design">Free Html
+               Templates</a> Distributed by <a href="http://themewagon.com" target="_blank">ThemeWagon</a></p>
+      </div>
+   </div>
+   <!-- copyright section end -->
+   <!-- Javascript files-->
+   <script src="js/jquery.min.js"></script>
+   <script src="js/popper.min.js"></script>
+   <script src="js/bootstrap.bundle.min.js"></script>
+   <script src="js/jquery-3.0.0.min.js"></script>
+   <script src="js/plugin.js"></script>
+   <!-- sidebar -->
+   <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+   <script src="js/custom.js"></script>
+</body>
+
+</html>
